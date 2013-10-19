@@ -1,8 +1,8 @@
 # nginx + PHP5-FPM + MariaDB + supervisord on Docker
 #
-# VERSION               0.0.1
+# VERSION               0.0.2
 FROM        ubuntu:12.04
-MAINTAINER  Steeve Morin "steeve.morin@gmail.com"
+MAINTAINER  Sagie Maoz "sagiem@gmail.com"
 
 # Update packages
 RUN echo "deb http://archive.ubuntu.com/ubuntu/ precise universe" >> /etc/apt/sources.list
@@ -39,6 +39,6 @@ RUN apt-get -y install python-setuptools
 RUN easy_install supervisor
 ADD supervisord.conf /etc/supervisord.conf
 
-EXPOSE 8080:80
+EXPOSE 80
 
 CMD supervisord -n -c /etc/supervisord.conf

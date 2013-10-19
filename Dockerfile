@@ -38,6 +38,9 @@ RUN mkdir -p /var/www && chown -R www-data:www-data /var/www
 RUN apt-get -y install python-setuptools
 RUN easy_install supervisor
 ADD supervisor.conf /etc/supervisor.conf
+ADD supervisor.mariadb.conf /etc/supervisor/conf.d/
+ADD supervisor.nginx.conf /etc/supervisor/conf.d/
+ADD supervisor.php5-fpm.conf /etc/supervisor/conf.d/
 
 EXPOSE 80
 

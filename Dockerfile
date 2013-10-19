@@ -37,8 +37,8 @@ RUN mkdir -p /var/www && chown -R www-data:www-data /var/www
 # Supervisord
 RUN apt-get -y install python-setuptools
 RUN easy_install supervisor
-ADD supervisord.conf /etc/supervisord.conf
+ADD supervisor.conf /etc/supervisor.conf
 
 EXPOSE 80
 
-CMD supervisord -n -c /etc/supervisord.conf
+CMD supervisord -n -c /etc/supervisor.conf

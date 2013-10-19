@@ -1,5 +1,5 @@
-# nginx + PHP5-FPM + MariaDB + supervisord on Docker
-#
+# nginx + PHP5-FPM + MariaDB + supervisord + ssh on Docker
+# forked from steeve/lemp https://github.com/steeve/docker-lemp
 # VERSION               0.0.2
 FROM        ubuntu:12.04
 MAINTAINER  Sagie Maoz "sagiem@gmail.com"
@@ -34,14 +34,22 @@ ADD nginx_default.conf /etc/nginx/sites-available/default
 RUN echo "cgi.fix_pathinfo = 0;" >> /etc/php5/fpm/php.ini
 RUN mkdir -p /var/www && chown -R www-data:www-data /var/www
 
+# Install sshd
+RUN apt-get install -y openssh-server
+RUN mkdir /var/run/sshd 
+RUN sed -i -e "s/#PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
+RUN mkdir /root/.ssh && chmod 755 /root/.ssh
+ADD authorized_keys /root/.ssh/
+RUN chmod 644 /root/.ssh/authorized_keys && chown root:root /root/.ssh/authorized_keys
+
 # Supervisord
-RUN apt-get -y install python-setuptools
-RUN easy_install supervisor
-ADD supervisor.conf /etc/supervisor.conf
+RUN apt-get install -y supervisor
 ADD supervisor.mariadb.conf /etc/supervisor/conf.d/
 ADD supervisor.nginx.conf /etc/supervisor/conf.d/
 ADD supervisor.php5-fpm.conf /etc/supervisor/conf.d/
+ADD supervisor.sshd.conf /etc/supervisor/conf.d/
 
-EXPOSE 80
+EXPOSE 80 22
 
-CMD supervisord -n -c /etc/supervisor.conf
+CMD supervisord -n
+
